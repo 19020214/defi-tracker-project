@@ -22,7 +22,7 @@ function TransferHistory({ chain, wallet, transfers, setTransfers }) {
   return (
     <>
       <div className="tabHeading">
-        Tansfer History <Reload onClick={getTokenTransfers} />
+        Transfer History <Reload onClick={getTokenTransfers} />
       </div>
       <div>
         {transfers.length > 0 && (

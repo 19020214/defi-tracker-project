@@ -1,5 +1,4 @@
 const Moralis = require("moralis").default;
-const { EvmChain } = require("@moralisweb3/common-evm-utils");
 const express = require("express");
 const cors = require("cors");
 require("dotenv").config();
@@ -8,31 +7,27 @@ const app = express();
 const port = 8080;
 
 app.use(cors());
+const MORALIS_API_KEY = process.env.MORALIS_API_KEY
 
-app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`);
-});
+// app.listen(port, () => {
+//   console.log(`Example app listening on port ${port}`);
+// });
 
 //GET AMOUNT AND VALUE OF NATIVE TOKENS
 
 app.get("/nativeBalance", async (req, res) => {
-  await Moralis.start({
-    apiKey: process.env.MORALIS_API_KEY,
-    });
   try {
     const { address, chain } = req.query;
-
     const response = await Moralis.EvmApi.balance.getNativeBalance({
       address: address,
       chain: chain,
-    });
+    });    
 
     const nativeBalance = response.data;
-
     let nativeCurrency;
-    if (chain === EvmChain.POLYGON) {
+    if (chain === "0x1") {
       nativeCurrency = "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2";
-    } else if (chain === EvmChain.ETHEREUM) {
+    } else if (chain === "0x89") {
       nativeCurrency = "0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270";
     }
 
@@ -42,8 +37,8 @@ app.get("/nativeBalance", async (req, res) => {
     });
 
     nativeBalance.usd = nativePrice.data.usdPrice;
-
     res.send(nativeBalance);
+
   } catch (e) {
     res.send(e);
   }
@@ -54,9 +49,6 @@ app.get("/nativeBalance", async (req, res) => {
 //GET AMOUNT AND VALUE OF ERC20 TOKENS
 
 app.get("/tokenBalances", async (req, res) => {
-  await Moralis.start({
-    apiKey: process.env.MORALIS_API_KEY,
-    });
   try {
     const { address, chain } = req.query;
 
@@ -93,9 +85,7 @@ app.get("/tokenBalances", async (req, res) => {
 //GET Users NFT's
 
 app.get("/nftBalance", async (req, res) => {
-  await Moralis.start({
-    apiKey: process.env.MORALIS_API_KEY,
-    });
+
   try {
     const { address, chain } = req.query;
 
@@ -115,9 +105,7 @@ app.get("/nftBalance", async (req, res) => {
 //GET USERS TOKEN TRANSFERS
 
 app.get("/tokenTransfers", async (req, res) => {
-  await Moralis.start({
-    apiKey: process.env.MORALIS_API_KEY,
-    });
+
   try {
     const { address, chain } = req.query;
 
@@ -154,3 +142,11 @@ app.get("/tokenTransfers", async (req, res) => {
     res.send(e);
   }
 });
+
+Moralis.start({
+  apiKey: MORALIS_API_KEY
+}).then(() => {
+  app.listen(port, () => {
+      console.log(`Example app listening on port ${port}`)
+  })
+})
