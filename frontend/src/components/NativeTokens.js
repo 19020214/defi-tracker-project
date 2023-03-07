@@ -21,13 +21,11 @@ function NativeTokens({
         chain: chain,
       },
     });
-    if (response.data.balance && response.data.usd) {
-      setNativeBalance((Number(response.data.balance) / 1e18).toFixed(3));
+
+    if (response.raw.balance && response.raw.usd) {
+      setNativeBalance((Number(response.raw.balance) / 1e18).toFixed(3));
       setNativeValue(
-        (
-          (Number(response.data.balance) / 1e18) *
-          Number(response.data.usd)
-        ).toFixed(2)
+        ((Number(response.raw.balance) / 1e18) * Number(response.raw.usd)).toFixed(2)
       );
     }
   }

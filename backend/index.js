@@ -23,7 +23,7 @@ app.get("/nativeBalance", async (req, res) => {
       chain: chain,
     });    
 
-    const nativeBalance = response.data;
+    const nativeBalance = response.raw;
     let nativeCurrency;
     if (chain === "0x1") {
       nativeCurrency = "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2";
@@ -36,8 +36,9 @@ app.get("/nativeBalance", async (req, res) => {
       chain: chain,
     });
 
-    nativeBalance.usd = nativePrice.data.usdPrice;
+    nativeBalance.usd = nativePrice.raw.usdPrice;
     res.send(nativeBalance);
+    console.log(nativeBalance);
 
   } catch (e) {
     res.send(e);
@@ -57,7 +58,7 @@ app.get("/tokenBalances", async (req, res) => {
       chain: chain,
     });
 
-    let tokens = response.data;
+    let tokens = response.raw;
     let legitTokens = [];
     for (let i = 0; i < tokens.length; i++) {
       try {
@@ -65,8 +66,8 @@ app.get("/tokenBalances", async (req, res) => {
           address: tokens[i].token_address,
           chain: chain,
         });
-        if (priceResponse.data.usdPrice > 0.01) {
-          tokens[i].usd = priceResponse.data.usdPrice;
+        if (priceResponse.raw.usdPrice > 0.01) {
+          tokens[i].usd = priceResponse.raw.usdPrice;
           legitTokens.push(tokens[i]);
         } else {
           console.log("💩 coin");

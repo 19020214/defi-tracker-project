@@ -13,8 +13,8 @@ function Tokens({ wallet, chain, tokens, setTokens }) {
       },
     });
 
-    if (response.data) {
-      tokenProcessing(response.data);
+    if (response.raw) {
+      tokenProcessing(response.raw);
     }
   }
 
